@@ -39,6 +39,7 @@ func TestAccAWSDBClusterSnapshot_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "status", "available"),
 					resource.TestCheckResourceAttr(resourceName, "storage_encrypted", "false"),
 					resource.TestMatchResourceAttr(resourceName, "vpc_id", regexp.MustCompile(`^vpc-.+`)),
+					resource.TestCheckResourceAttr("aws_db_cluster_snapshot.test", "tags.Name", resourceName),
 				),
 			},
 			{
@@ -150,6 +151,9 @@ resource "aws_rds_cluster" "test" {
 resource "aws_db_cluster_snapshot" "test" {
   db_cluster_identifier          = "${aws_rds_cluster.test.id}"
   db_cluster_snapshot_identifier = %q
+  tags = {
+	Name = %q
+  } 
 }
-`, rName, rName, rName, rName, rName)
+`, rName, rName, rName, rName, rName, rName)
 }
